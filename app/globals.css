@@ -26,3 +26,6 @@ body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background:linear-gradient(90deg, #4824a8,#371b7f, #4824a8);
 }
+.shadowutil{
+    box-shadow: 0 0 10px #ffffff;
+}
