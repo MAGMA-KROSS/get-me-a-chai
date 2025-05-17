@@ -13,23 +13,25 @@ providers: [
 ],
 callbacks: {
   async signIn({ user, account, profile, email, credentials }) {
-    if(account.provider == "github"){
-      const client = await mongoose.connect("mongodb+srv://abik4001:abik1234@cluster0.q8bkizs.mongodb.net/")
-      const currentUser = User.findOne({ email: user.email })
-      if(currentUser){
+    if (account.provider === "github") {
+      const client = await mongoose.connect("mongodb+srv://abik4001:abik1234@cluster0.q8bkizs.mongodb.net/");
+      
+      const currentUser = await User.findOne({ email: user.email }); // ✅ Fixed
+  
+      if (!currentUser) { // ✅ check if user DOES NOT exist
         const newUser = await User.create({
           email: user.email,
           username: user.email.split('@')[0]
-        })
-        await newUser.save()
-        user.name = newUser.username
+        });
+        user.name = newUser.username;
+      } else {
+        user.name = currentUser.username;
       }
-      else{
-        user.name = currentUser.username
-      }
-      return true
+  
+      return true;
     }
   }
+  
 },
 });
 
