@@ -20,7 +20,7 @@ export const initiate = async (amount, to_user, paymentform) => {
         name: paymentform.name,
         to_user: to_user,
         orderId: x.id,
-        amount: amount,
+        amount: amount/10,
         message: paymentform.message
     })
     return x
@@ -64,4 +64,16 @@ export const fetchpayments = async (username) => {
     }));
     
     return serializedPayments;
+}
+
+export const updateprofile = async (data ,oldusername)=>{
+    await mongoose.connect(process.env.MONGO_URI);
+    let ndata = Object.fromEntries(data)
+    if (oldusername !== ndata.username) {
+        const u = await User.findOne({ username: ndata.username });
+        if (u) {
+            return { error: "Username already exists" };
+        }
+    }
+    await User.updateOne({email:ndata.email},ndata );
 }

@@ -78,6 +78,7 @@ const PaymentPage = ({ username }) => {
                     <div className="w-[50%] bg-black text-white px-18 shadowutil py-12 rounded-2xl ">
                         <div className="text-4xl font-extrabold">Supporters</div>
                         <div className="flex flex-col gap-4">
+                            {payments.length === 0 && <div className="text-center text-gray-500">No payments yet</div>}
                             {payments.map((p, i) => {
                             return <div key={i} className="flex items-center gap-1 mt-4 mx-6 text-xl">
                                 <span><img className='rounded-full mr-5 border-1 border-white' width={34} src="/pro.svg" alt="" /></span><span>{p.name} donated <span className='font-extrabold'>{p.amount}</span> Chai with a message "{p.message}"</span>
@@ -85,7 +86,7 @@ const PaymentPage = ({ username }) => {
                             })}
                         </div>
                     </div>
-                    <div className="w-[50%] bg-black text-white px-18 shadowutil py-12 rounded-2xl ">
+                    <div className="w-[50%] bg-black text-white px-18 h-[550px] shadowutil py-12 rounded-2xl ">
                         <div className="text-4xl font-extrabold">Show some support</div>
                         <form
                             onSubmit={(e) => {
