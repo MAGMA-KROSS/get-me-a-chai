@@ -3,16 +3,33 @@ import React, { useState } from 'react'
 import Script from 'next/script'
 import { initiate } from '@/actions/useraction'
 import { useSession } from 'next-auth/react'
+import { set } from 'mongoose'
+import { fetchuser, fetchpayments } from '@/actions/useraction'
+import { useEffect } from 'react'
 const PaymentPage = ({ username }) => {
     const [paymentform, setPaymentform] = useState({
         name: "",
         message: "",
         amount: ""
     });
+    const [currentuser, setcurrentuser] = useState({})
+    const [payments, setPayments] = useState([])
+
+    useEffect(() => {
+        getData()
+    }, [])
 
     const handlechange = (e) => {
         setPaymentform({ ...paymentform, [e.target.name]: e.target.value });
     }
+
+    const getData = async () => {
+        let u = await fetchuser(username)
+        setcurrentuser(u)
+        let dbpayments = await fetchpayments(username)
+        setPayments(dbpayments)
+    }
+
     const pay = async (amount) => {
         let a = await initiate(amount, username, paymentform)
         let orderID = a.id
@@ -61,24 +78,11 @@ const PaymentPage = ({ username }) => {
                     <div className="w-[50%] bg-black text-white px-18 shadowutil py-12 rounded-2xl ">
                         <div className="text-4xl font-extrabold">Supporters</div>
                         <div className="flex flex-col gap-4">
-                            <div className="flex items-center gap-1 mt-4 mx-6 text-xl">
-                                <span><img className='rounded-full mr-1 border-1 border-white' width={34} src="/pro.svg" alt="" /></span><span>Abi donated</span><span>100 Chai</span><span>with a message</span><span>"I support you bro"</span>
+                            {payments.map((p, i) => {
+                            return <div key={i} className="flex items-center gap-1 mt-4 mx-6 text-xl">
+                                <span><img className='rounded-full mr-5 border-1 border-white' width={34} src="/pro.svg" alt="" /></span><span>{p.name} donated <span className='font-extrabold'>{p.amount}</span> Chai with a message "{p.message}"</span>
                             </div>
-                            <div className="flex items-center gap-1 mt-4 mx-6 text-xl">
-                                <span><img className='rounded-full mr-1 border-1 border-white' width={34} src="/pro.svg" alt="" /></span><span>Abi donated</span><span>100 Chai</span><span>with a message</span><span>"I support you bro"</span>
-                            </div>
-                            <div className="flex items-center gap-1 mt-4 mx-6 text-xl">
-                                <span><img className='rounded-full mr-1 border-1 border-white' width={34} src="/pro.svg" alt="" /></span><span>Abi donated</span><span>100 Chai</span><span>with a message</span><span>"I support you bro"</span>
-                            </div>
-                            <div className="flex items-center gap-1 mt-4 mx-6 text-xl">
-                                <span><img className='rounded-full mr-1 border-1 border-white' width={34} src="/pro.svg" alt="" /></span><span>Abi donated</span><span>100 Chai</span><span>with a message</span><span>"I support you bro"</span>
-                            </div>
-                            <div className="flex items-center gap-1 mt-4 mx-6 text-xl">
-                                <span><img className='rounded-full mr-1 border-1 border-white' width={34} src="/pro.svg" alt="" /></span><span>Abi donated</span><span>100 Chai</span><span>with a message</span><span>"I support you bro"</span>
-                            </div>
-                            <div className="flex items-center gap-1 mt-4 mx-6 text-xl">
-                                <span><img className='rounded-full mr-1 border-1 border-white' width={34} src="/pro.svg" alt="" /></span><span>Abi donated</span><span>100 Chai</span><span>with a message</span><span>"I support you bro"</span>
-                            </div>
+                            })}
                         </div>
                     </div>
                     <div className="w-[50%] bg-black text-white px-18 shadowutil py-12 rounded-2xl ">
